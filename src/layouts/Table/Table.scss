@@ -2,7 +2,8 @@
     grid-column: 2 / span 7;
     grid-row: 2 / auto;
     width: 1200px;
-    background-color: var(--background-dark);
+    background-color: var(--bg-dark);
+    padding-left: 10px;
 
     .title {
         font-size: 18px;
@@ -12,10 +13,13 @@
         justify-content: center;
         align-items: center;
         padding: 12px 15px;
+
     }
 
     .table-section thead {
         display: flex;
         color: var(--color-dark);
+        border-bottom: 1px solid #414144;
+
     }
 }

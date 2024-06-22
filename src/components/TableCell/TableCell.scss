@@ -1,0 +1,35 @@
+.cell {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    width: 85px;
+
+    .icon {
+        cursor: pointer;
+        font-size: 24px;
+        transition: opacity 0.3s ease;
+    }
+
+    .delete {
+        top: 0;
+        left: 25px;
+        transition: opacity 0.3s ease;
+    }
+
+
+
+
+    .container {
+        background-color: #414144;
+        padding: 3px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        width: 55px;
+
+        &.transparent {
+            background-color: transparent;
+        }
+    }
+}

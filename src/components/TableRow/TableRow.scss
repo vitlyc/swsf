@@ -1,0 +1,25 @@
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: var(--bg-dark);
+    border-bottom: 1px solid #414144;
+    width: 100%;
+    padding: 18px 12px;
+
+    &.child-row {
+        td {
+            // padding-left: calc(var(--base-padding, 0px) + 20px);
+        }
+    }
+
+    td {
+        margin-right: 20px;
+    }
+
+    input:disabled {
+        background-color: var(--bg-dark);
+        border: 0;
+        color: inherit;
+    }
+}
