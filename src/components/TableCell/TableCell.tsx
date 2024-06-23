@@ -2,16 +2,23 @@ import './TableCell.scss'
 import FeedIcon from '@mui/icons-material/Feed'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../store/store'
+import { deleteTemporaryRow } from '../../store/rowsSlice'
 
 type Props = {
   id?: number
-  addRow: (id: number | null, nested: number) => void
+  addRow: (parentId: number | null, nested: number) => void
   deleteRow: (id: number | undefined, nested: number) => void
   nested: number
 }
 
 function TableCell({ id, addRow, deleteRow, nested }: Props) {
   const [visibleDelete, setVisibleDelete] = useState(false)
+  const isRowCreated = useSelector(
+    (state: RootState) => state.rows.isRowCreated
+  )
+  const dispatch = useDispatch()
 
   const onMouseOver: React.MouseEventHandler<HTMLDivElement> = () => {
     setVisibleDelete(true)
@@ -22,11 +29,17 @@ function TableCell({ id, addRow, deleteRow, nested }: Props) {
   }
 
   const handleAddClick = () => {
-    addRow(id ?? null, nested)
+    if (!isRowCreated) {
+      addRow(id ?? null, nested)
+    }
   }
 
   const handleDeleteClick = () => {
-    deleteRow(id, nested)
+    if (id === 112233) {
+      dispatch(deleteTemporaryRow())
+    } else {
+      deleteRow(id, nested)
+    }
   }
 
   return (

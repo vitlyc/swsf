@@ -10,6 +10,7 @@ const initialState: RowsState = {
   data: null,
   isRowCreated: false,
 }
+
 const updateRowById = (
   rows: RowData[],
   id: number,
@@ -25,6 +26,7 @@ const updateRowById = (
     return row
   })
 }
+
 const removeRowById = (rows: RowData[], id: number): RowData[] => {
   return rows.filter((row) => {
     if (row.id === id) {
@@ -55,6 +57,7 @@ const addRowToParent = (rows: RowData[], newRow: RowData): RowData[] => {
     return row
   })
 }
+
 const replaceRowById = (rows: RowData[], newRow: RowData): RowData[] => {
   return rows.map((row) => {
     if (row.id === 112233) {
@@ -69,6 +72,7 @@ const replaceRowById = (rows: RowData[], newRow: RowData): RowData[] => {
     return row
   })
 }
+
 const rowsSlice = createSlice({
   name: 'rows',
   initialState,
@@ -80,43 +84,47 @@ const rowsSlice = createSlice({
     addNewRow: (state, action: PayloadAction<{ newRow: RowData }>) => {
       const { newRow } = action.payload
 
-      console.log(newRow)
-
       if (state.data) {
         state.data = replaceRowById(state.data, newRow)
       } else {
         state.data = [newRow]
       }
+      state.isRowCreated = false
     },
+
     addEmptyRow: (
       state,
       action: PayloadAction<{ id: number | null; nested: number }>
     ) => {
-      const newRow: RowData = {
-        id: 112233, // Temporary ID for the new row
-        parentId: action.payload.id,
-        child: [],
-        equipmentCosts: 0,
-        estimatedProfit: 0,
-        machineOperatorSalary: 0,
-        mainCosts: 0,
-        materials: 0,
-        mimExploitation: 0,
-        overheads: 0,
-        rowName: '',
-        salary: 0,
-        supportCosts: 0,
-      }
-      if (state.data) {
-        if (newRow.parentId === null) {
-          state.data = [...state.data, newRow]
-        } else {
-          state.data = addRowToParent(state.data, newRow)
+      if (!state.isRowCreated) {
+        const newRow: RowData = {
+          id: 112233, // Temporary ID for the new row
+          parentId: action.payload.id,
+          child: [],
+          equipmentCosts: 0,
+          estimatedProfit: 0,
+          machineOperatorSalary: 0,
+          mainCosts: 0,
+          materials: 0,
+          mimExploitation: 0,
+          overheads: 0,
+          rowName: '',
+          salary: 0,
+          supportCosts: 0,
         }
-      } else {
-        state.data = [newRow]
+        if (state.data) {
+          if (newRow.parentId === null) {
+            state.data = [...state.data, newRow]
+          } else {
+            state.data = addRowToParent(state.data, newRow)
+          }
+        } else {
+          state.data = [newRow]
+        }
+        state.isRowCreated = true
       }
     },
+
     updateRow: (
       state,
       action: PayloadAction<{ id: number; updatedData: Partial<RowData> }>
@@ -129,14 +137,34 @@ const rowsSlice = createSlice({
         )
       }
     },
+
     deleteRow: (state, action: PayloadAction<number>) => {
       if (state.data) {
         state.data = removeRowById(state.data, action.payload)
+        state.isRowCreated = false
       }
+    },
+
+    deleteTemporaryRow: (state) => {
+      if (state.data) {
+        state.data = removeRowById(state.data, 112233)
+        state.isRowCreated = false
+      }
+    },
+
+    resetIsRowCreated: (state) => {
+      state.isRowCreated = false
     },
   },
 })
 
-export const { setRows, addNewRow, addEmptyRow, updateRow, deleteRow } =
-  rowsSlice.actions
+export const {
+  setRows,
+  addNewRow,
+  addEmptyRow,
+  updateRow,
+  deleteRow,
+  deleteTemporaryRow,
+  resetIsRowCreated,
+} = rowsSlice.actions
 export default rowsSlice.reducer

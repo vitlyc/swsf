@@ -9,7 +9,11 @@ import {
   useUpdateRowMutation,
 } from '../../store/api/api'
 import { useDispatch } from 'react-redux'
-import { addEmptyRow } from '../../store/rowsSlice'
+import {
+  addEmptyRow,
+  resetIsRowCreated,
+  deleteTemporaryRow,
+} from '../../store/rowsSlice'
 
 type Props = {
   row: RowData
@@ -44,32 +48,41 @@ function TableRow({ row, nested }: Props) {
   const handleMouseUp = () => {}
 
   const handleDeleteRow = (id: number | undefined, nested: number) => {
-    if (id !== undefined) {
-      deleteRowMutation({ id })
+    if (id === 112233) {
+      dispatch(deleteTemporaryRow())
     } else {
-      console.error('ID is undefined')
+      if (id !== undefined) {
+        deleteRowMutation({ id })
+      } else {
+        console.error('ID is undefined')
+      }
     }
   }
 
   const handleAddRow = (id: number | null, nested: number) => {
     dispatch(addEmptyRow({ id, nested }))
   }
-  console.log(rowData.id)
-  console.log(row.id)
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (
       e.key === 'Enter' &&
       rowData.rowName.trim() !== '' &&
-      rowData.rowName !== row.rowName &&
       rowData.id === 112233
     ) {
-      addRowMutation(rowData)
+      try {
+        await addRowMutation(rowData).unwrap()
+        dispatch(resetIsRowCreated()) // Сброс состояния после добавления строки
+      } catch (error) {
+        console.error('Failed to add row:', error)
+      }
     } else if (e.key === 'Enter' && rowData.rowName.trim() !== '') {
-      console.log('tut')
       setIsDisabled((prevState) => !prevState)
       if (rowData.id !== undefined) {
-        updateRowMutation({ id: rowData.id, ...rowData })
+        try {
+          await updateRowMutation({ id: rowData.id, ...rowData }).unwrap()
+        } catch (error) {
+          console.error('Failed to update row:', error)
+        }
       }
     }
   }
@@ -88,7 +101,7 @@ function TableRow({ row, nested }: Props) {
 
   return (
     <tr
-      className={`row ${row.id === 112233 ? 'new-row' : ''}`} // Add class for new rows
+      className={`row ${row.id === 112233 ? 'new-row' : ''}`}
       onDoubleClick={handleDoubleClick}
       onMouseUp={handleMouseUp}
     >

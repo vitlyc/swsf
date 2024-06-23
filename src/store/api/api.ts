@@ -22,7 +22,6 @@ export const api = createApi({
       async onQueryStarted(body, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled
-          console.log(data.current)
           dispatch(addNewRow({ newRow: data.current }))
         } catch (error) {
           console.error('Failed to create row:', error)
