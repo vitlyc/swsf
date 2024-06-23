@@ -43,9 +43,15 @@ function TableCell({ id, addRow, deleteRow, nested }: Props) {
   }
 
   return (
-    <div className="cell" style={{ marginLeft: `${nested * 20}px` }}>
+    <div
+      data-nested={nested}
+      className="cell"
+      style={{ marginLeft: `${nested * 20}px` }}
+    >
       <div
-        className={`container ${visibleDelete ? '' : 'transparent'}`}
+        className={`container ${
+          visibleDelete ? '' : 'transparent'
+        } nested-${nested}`}
         onMouseOver={onMouseOver}
         onMouseOut={onMouseOut}
       >

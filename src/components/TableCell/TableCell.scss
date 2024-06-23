@@ -1,3 +1,92 @@
+// .cell {
+//     display: flex;
+//     align-items: center;
+//     justify-content: start;
+//     min-width: 85px;
+//     position: relative;
+
+
+
+//     .icon {
+//         cursor: pointer;
+//         font-size: 24px;
+//         transition: opacity 0.3s ease;
+//         // position: relative
+//     }
+
+//     .delete {
+//         top: 0;
+//         left: 25px;
+//         transition: opacity 0.3s ease;
+//     }
+
+
+
+
+//     .container {
+//         background-color: #414144;
+//         padding: 3px;
+//         border-radius: 6px;
+//         display: flex;
+//         align-items: center;
+//         justify-content: start;
+//         width: 55px;
+
+//         &.transparent {
+//             background-color: transparent;
+//         }
+//     }
+
+//     &::before {
+//         //vertical
+//         content: '';
+//         position: absolute;
+//         top: 0;
+//         bottom: 0;
+//         left: -5%; // Center the line horizontally within the container
+//         width: 2px; // Line width
+//         background-color: white; // Line color
+//         z-index: 0; // Place the line behind the icon
+
+
+//     }
+
+//     &::after {
+//         //horizontal
+//         content: '';
+//         position: absolute;
+//         top: 50%;
+//         left: 50%; // Center the line horizontally within the container
+//         width: 20px; // Length of the horizontal line segment
+//         height: 2px; // Line height
+//         background-color: white; // Line color
+//         z-index: 0; // Place the line behind the icon
+//         transform: translateX(-50%); // Adjust to properly align with the vertical line
+//     }
+
+//     .cell:first-of-type {}
+
+//     &[data-nested="1"] {
+//         .container::before {
+//             // Стили для nested=1
+//             content: 'b';
+//             border: red 1px solid;
+//             position: absolute;
+
+//         }
+
+//         .container::after {
+//             // Стили для nested=1
+//             content: 'a'
+//         }
+//     }
+
+
+
+
+// }
+
+
 .cell {
     display: flex;
     align-items: center;
@@ -8,7 +97,8 @@
         cursor: pointer;
         font-size: 24px;
         transition: opacity 0.3s ease;
-
+        position: relative;
+        z-index: 2;
     }
 
     .delete {
@@ -16,9 +106,6 @@
         left: 25px;
         transition: opacity 0.3s ease;
     }
-
-
-
 
     .container {
         background-color: #414144;
@@ -28,9 +115,57 @@
         align-items: center;
         justify-content: start;
         width: 55px;
+        position: relative;
 
         &.transparent {
             background-color: transparent;
         }
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: -115%; //вверх вниз
+            bottom: -50%; //длина палочки -больше
+            left: -11%; // -влево
+
+            height: 52px; //длина палочки
+            width: 1px;
+            background-color: rgb(255, 255, 255);
+            z-index: 0;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 56%; //-вверх
+            left: 0%; // -влево
+            width: 12px; //длина палочки
+            height: 1px;
+            background-color: rgb(255, 255, 255);
+            z-index: 1;
+            transform: translateX(-50%);
+        }
+
+        &.nested-1 {
+            &::before {
+                content: '';
+                background-color: rgb(188, 30, 30);
+                width: 0px;
+            }
+
+            &::after {
+                content: '';
+                background-color: rgb(188, 30, 30);
+                width: 0px;
+
+            }
+        }
+
+
+
     }
+
+
+
+
 }
