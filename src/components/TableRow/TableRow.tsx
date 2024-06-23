@@ -30,9 +30,11 @@ function TableRow({ row, nested }: Props) {
   const handleMouseUp = () => {}
 
   const handleDeleteRow = (id: number | undefined, nested: number) => {
-    dispatch(deleteRow(id!))
-    console.log('id', id)
-    // deleteRowMutation(id!)
+    if (id !== undefined) {
+      deleteRowMutation({ id })
+    } else {
+      console.error('ID is undefined')
+    }
   }
 
   const handleAddRow = (parentId: number | null, nested: number) => {

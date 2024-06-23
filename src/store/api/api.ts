@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { RowData } from '../types'
+import { setRows, addRow, deleteRow, editRow } from '../rowsSlice'
 
 const baseUrl = import.meta.env.VITE_BASE_URL
 const userID = import.meta.env.VITE_USER_ID
@@ -24,6 +25,14 @@ export const api = createApi({
         url: `/row/${id}/delete`,
         method: 'DELETE',
       }),
+      async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled
+          dispatch(deleteRow(id))
+        } catch (error) {
+          console.error('Failed to delete row:', error)
+        }
+      },
     }),
   }),
 })
