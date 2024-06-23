@@ -49,11 +49,11 @@ function TableRow({
     parentId,
     isNew,
   })
+  // console.log('isNew', isNew)
 
   const [addRowMutation] = useAddRowMutation()
   const [deleteRowMutation] = useDeleteRowMutation()
   const inputRef = useRef<HTMLInputElement>(null)
-  console.log(nested)
 
   useEffect(() => {
     if (!isDisabled) {
@@ -97,7 +97,6 @@ function TableRow({
           child: rowData.child,
           parentId: rowData.parentId,
         })
-        console.log(res)
       } catch (error) {
         console.error('Failed to add row:', error)
       }
@@ -114,12 +113,13 @@ function TableRow({
   }
 
   return (
-    <tr className={`row ${nested > 0 ? 'child-row' : ''}`} style={style}>
+    <tr className="row">
       <td>
         <TableCell
           addRow={() => addRow(id ?? null)}
           id={id}
           deleteRow={handleDelete}
+          nested={nested}
         />
       </td>
       <td>
@@ -130,7 +130,6 @@ function TableRow({
           onChange={(e) => handleChange(e, 'rowName')}
           disabled={isDisabled}
           onKeyDown={handleKeyDown}
-          className={nested > 0 ? 'child-input' : ''}
         />
       </td>
       <td>

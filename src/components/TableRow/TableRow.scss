@@ -4,7 +4,6 @@
     justify-content: flex-start;
     background-color: var(--bg-dark);
     border-bottom: 1px solid #414144;
-    width: 100%;
     padding: 18px 12px;
 
     &.child-row {
@@ -22,4 +21,5 @@
         border: 0;
         color: inherit;
     }
+
 }

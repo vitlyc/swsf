@@ -15,7 +15,6 @@ export default function Table({}: Props) {
   const list = useSelector((state: RootState) => state.list.data)
   const { data, error, isLoading, isFetching } = useGetListQuery()
   const [activeRowId, setActiveRowId] = useState<number | null>(null)
-  console.log(data)
 
   useEffect(() => {
     if (data) {
@@ -24,7 +23,8 @@ export default function Table({}: Props) {
   }, [data, dispatch])
 
   const addRow = (parentId: number | null = null) => {
-    dispatch(addEmptyRow(parentId))
+    console.log(parentId)
+    // dispatch(addEmptyRow(parentId))
   }
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function Table({}: Props) {
           isDisabled={activeRowId !== row.id}
           isNew={row.isNew}
           nested={nested}
-          style={{ paddingLeft: nested * 10 + 'px' }}
+          style={{ marginLeft: nested * 20 + 'px' }}
         />
         {row.child && row.child.length > 0 && renderRows(row.child, nested + 1)}
       </React.Fragment>

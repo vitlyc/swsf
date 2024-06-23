@@ -2,12 +2,13 @@
     display: flex;
     align-items: center;
     justify-content: start;
-    width: 85px;
+    min-width: 85px;
 
     .icon {
         cursor: pointer;
         font-size: 24px;
         transition: opacity 0.3s ease;
+
     }
 
     .delete {

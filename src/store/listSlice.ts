@@ -9,6 +9,20 @@ const initialState: ListState = {
   data: null,
 }
 
+// Функция для поиска объекта по parentId в дереве
+const findRowById = (rows: RowData[], parentId: number): RowData | null => {
+  for (let row of rows) {
+    if (row.id === parentId) {
+      return row
+    }
+    if (row.child && row.child.length > 0) {
+      const result = findRowById(row.child, parentId)
+      if (result) return result
+    }
+  }
+  return null
+}
+
 const listSlice = createSlice({
   name: 'list',
   initialState,
@@ -35,10 +49,23 @@ const listSlice = createSlice({
         parentId: parentId,
         isNew: true,
       }
-      if (state.data) {
-        state.data.push(newRow)
-      } else {
-        state.data = [newRow]
+
+      if (parentId === null) {
+        // Добавление строки на верхний уровень
+        if (state.data) {
+          state.data.push(newRow)
+        } else {
+          state.data = [newRow]
+        }
+      } else if (state.data) {
+        // Поиск родительского элемента и добавление новой строки в его child
+        const parentRow = findRowById(state.data, parentId)
+        if (parentRow) {
+          if (!parentRow.child) {
+            parentRow.child = [] // Initialize child array if undefined
+          }
+          parentRow.child.push(newRow)
+        }
       }
     },
   },

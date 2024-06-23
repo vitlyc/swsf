@@ -7,9 +7,10 @@ type Props = {
   id?: number
   addRow: (parentId: number | null) => void
   deleteRow: () => void
+  nested: number
 }
 
-function TableCell({ id, addRow, deleteRow }: Props) {
+function TableCell({ id, addRow, deleteRow, nested }: Props) {
   const [visibleDelete, setVisibleDelete] = useState(false)
 
   const onMouseOver: React.MouseEventHandler<HTMLDivElement> = () => {
@@ -25,7 +26,7 @@ function TableCell({ id, addRow, deleteRow }: Props) {
   }
 
   return (
-    <div className="cell">
+    <div className="cell" style={{ marginLeft: `${nested * 20}px` }}>
       <div
         className={`container ${visibleDelete ? '' : 'transparent'}`}
         onMouseOver={onMouseOver}
