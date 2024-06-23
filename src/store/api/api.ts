@@ -56,6 +56,8 @@ export const api = createApi({
         body,
       }),
       async onQueryStarted({ id, ...body }, { dispatch, queryFulfilled }) {
+        console.log({ id, ...body })
+
         try {
           const { data } = await queryFulfilled
           console.log('Updated row:', data)

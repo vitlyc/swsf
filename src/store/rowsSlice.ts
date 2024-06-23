@@ -3,10 +3,12 @@ import { RowData } from './types'
 
 interface RowsState {
   data: RowData[] | null
+  isRowCreated: boolean
 }
 
 const initialState: RowsState = {
   data: null,
+  isRowCreated: false,
 }
 const updateRowById = (
   rows: RowData[],

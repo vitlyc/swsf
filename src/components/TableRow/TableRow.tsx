@@ -32,7 +32,6 @@ function TableRow({ row, nested }: Props) {
   const [updateRowMutation] = useUpdateRowMutation()
   const inputRef = useFocus()
   const dispatch = useDispatch()
-  // console.log(row.id)
 
   useEffect(() => {
     setIsDisabled(row.id !== 112233)
@@ -55,29 +54,22 @@ function TableRow({ row, nested }: Props) {
   const handleAddRow = (id: number | null, nested: number) => {
     dispatch(addEmptyRow({ id, nested }))
   }
+  console.log(rowData.id)
+  console.log(row.id)
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (
       e.key === 'Enter' &&
       rowData.rowName.trim() !== '' &&
-      rowData.id !== row.id
+      rowData.rowName !== row.rowName &&
+      rowData.id === 112233
     ) {
       addRowMutation(rowData)
-    }
-
-    if (
-      e.key === 'Enter' &&
-      rowData.rowName.trim() !== '' &&
-      rowData.id === row.id
-    ) {
+    } else if (e.key === 'Enter' && rowData.rowName.trim() !== '') {
+      console.log('tut')
+      setIsDisabled((prevState) => !prevState)
       if (rowData.id !== undefined) {
-        try {
-          await updateRowMutation({ id: rowData.id, ...rowData }).unwrap()
-        } catch (error) {
-          console.error('Failed to update row:', error)
-        }
-      } else {
-        console.error('ID is undefined')
+        updateRowMutation({ id: rowData.id, ...rowData })
       }
     }
   }
