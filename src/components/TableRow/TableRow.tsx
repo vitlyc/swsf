@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState } from 'react'
 import './TableRow.scss'
 import TableCell from '../TableCell/TableCell'
+import { useFocus } from '../../utils/useFocus'
 import { RowData, RowToRender } from '../../store/types'
 import { useAddRowMutation, useDeleteRowMutation } from '../../store/api/api'
 import { useDispatch } from 'react-redux'
@@ -8,9 +9,9 @@ import { addEmptyRow } from '../../store/rowsSlice'
 
 type Props = {
   row: RowData
-  // addRow: (parentId: number | null) => void
   nested: number
 }
+
 const rowKeys: Array<keyof RowToRender> = [
   'rowName',
   'salary',
@@ -20,13 +21,17 @@ const rowKeys: Array<keyof RowToRender> = [
 ]
 
 function TableRow({ row, nested }: Props) {
-  const [isDisabled, setIsDisabled] = useState(true)
+  const [isDisabled, setIsDisabled] = useState(row.id !== 112233)
+  const [rowData, setRowData] = useState(row)
   const [addRowMutation] = useAddRowMutation()
   const [deleteRowMutation] = useDeleteRowMutation()
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useFocus()
   const dispatch = useDispatch()
 
-  const handleDoubleClick = () => {}
+  const handleDoubleClick = () => {
+    setIsDisabled((prevState) => !prevState)
+  }
+
   const handleMouseUp = () => {}
 
   const handleDeleteRow = (id: number | undefined, nested: number) => {
@@ -43,10 +48,19 @@ function TableRow({ row, nested }: Props) {
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {}
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     key: keyof RowToRender
-  ) => {}
+  ) => {
+    const value =
+      key === 'rowName' ? e.target.value : parseFloat(e.target.value)
+    setRowData((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }))
+  }
+
   return (
     <tr
       className={`row `}
@@ -66,7 +80,7 @@ function TableRow({ row, nested }: Props) {
           <input
             ref={key === 'rowName' ? inputRef : null}
             type={key === 'rowName' ? 'text' : 'number'}
-            value={row[key]}
+            value={rowData[key]}
             onChange={(e) => handleChange(e, key)}
             disabled={isDisabled}
             onKeyDown={handleKeyDown}

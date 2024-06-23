@@ -24,7 +24,7 @@ const removeRowById = (rows: RowData[], id: number): RowData[] => {
 }
 const createNewRow = (parentId: number | null): RowData => {
   return {
-    id: Date.now(), //vremennoe ID
+    id: 112233, //vremennoe ID
     parentId: parentId,
     child: [],
     equipmentCosts: 0,
