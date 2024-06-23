@@ -4,7 +4,7 @@ import TableCell from '../TableCell/TableCell'
 import { RowData, RowToRender } from '../../store/types'
 import { useAddRowMutation, useDeleteRowMutation } from '../../store/api/api'
 import { useDispatch } from 'react-redux'
-import { editRow, deleteRow } from '../../store/rowsSlice'
+import { addEmptyRow } from '../../store/rowsSlice'
 
 type Props = {
   row: RowData
@@ -20,7 +20,7 @@ const rowKeys: Array<keyof RowToRender> = [
 ]
 
 function TableRow({ row, nested }: Props) {
-  const [isDisabled, setIsDisabled] = useState(false)
+  const [isDisabled, setIsDisabled] = useState(true)
   const [addRowMutation] = useAddRowMutation()
   const [deleteRowMutation] = useDeleteRowMutation()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -37,8 +37,9 @@ function TableRow({ row, nested }: Props) {
     }
   }
 
-  const handleAddRow = (parentId: number | null, nested: number) => {
-    // addRowMutation({ parentId })
+  const addRow = (id: number | null, nested: number) => {
+    dispatch(addEmptyRow({ id, nested }))
+    console.log('id:', id, 'nested:', nested)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {}
@@ -56,7 +57,7 @@ function TableRow({ row, nested }: Props) {
         <TableCell
           id={row.id}
           deleteRow={handleDeleteRow}
-          addRow={handleAddRow}
+          addRow={addRow}
           nested={nested}
         />
       </td>

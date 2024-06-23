@@ -5,7 +5,7 @@ import { useState } from 'react'
 
 type Props = {
   id?: number
-  addRow: (parentId: number | null, nested: number) => void
+  addRow: (id: number | null, nested: number) => void
   deleteRow: (id: number | undefined, nested: number) => void
   nested: number
 }
