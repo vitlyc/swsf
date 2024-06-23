@@ -22,4 +22,17 @@
         color: inherit;
     }
 
+    input {
+        background-color: var(--bg-dark);
+        border: 0;
+        color: inherit;
+
+        &:focus {
+            outline: none;
+            border: 1px solid #414144;
+            border-radius: 6px;
+            width: 100%;
+            padding: 5px;
+        }
+    }
 }

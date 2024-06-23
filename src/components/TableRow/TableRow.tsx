@@ -1,173 +1,75 @@
+import React, { useState, useEffect, useRef } from 'react'
 import './TableRow.scss'
 import TableCell from '../TableCell/TableCell'
-import { RowData } from '../../store/types'
-import { useState, useEffect, useRef } from 'react'
+import { RowData, RowToRender } from '../../store/types'
 import { useAddRowMutation, useDeleteRowMutation } from '../../store/api/api'
+import { useDispatch } from 'react-redux'
+import { editRow, deleteRow } from '../../store/rowsSlice'
 
-type Props = RowData & {
-  addRow: (parentId: number | null) => void
-  isDisabled: boolean
+type Props = {
+  row: RowData
+  // addRow: (parentId: number | null) => void
   nested: number
-  style?: React.CSSProperties
 }
+const rowKeys: Array<keyof RowToRender> = [
+  'rowName',
+  'salary',
+  'equipmentCosts',
+  'overheads',
+  'estimatedProfit',
+]
 
-function TableRow({
-  id,
-  rowName,
-  total,
-  salary,
-  mimExploitation,
-  machineOperatorSalary,
-  materials,
-  mainCosts,
-  supportCosts,
-  equipmentCosts,
-  overheads,
-  estimatedProfit,
-  child,
-  parentId,
-  isDisabled,
-  isNew,
-  addRow,
-  nested,
-  style,
-}: Props) {
-  const [rowData, setRowData] = useState<RowData>({
-    id,
-    rowName,
-    total,
-    salary,
-    mimExploitation,
-    machineOperatorSalary,
-    materials,
-    mainCosts,
-    supportCosts,
-    equipmentCosts,
-    overheads,
-    estimatedProfit,
-    child,
-    parentId,
-    isNew,
-  })
-  // console.log('isNew', isNew)
-
+function TableRow({ row, nested }: Props) {
+  const [isDisabled, setIsDisabled] = useState(false)
   const [addRowMutation] = useAddRowMutation()
   const [deleteRowMutation] = useDeleteRowMutation()
   const inputRef = useRef<HTMLInputElement>(null)
+  const dispatch = useDispatch()
 
-  useEffect(() => {
-    if (!isDisabled) {
-      setRowData((prev) => ({ ...prev, isNew: false }))
-      inputRef.current?.focus()
-    }
-  }, [isDisabled])
+  const handleDoubleClick = () => {}
+  const handleMouseUp = () => {}
 
+  const handleDeleteRow = (id: number | undefined, nested: number) => {
+    dispatch(deleteRow(id!))
+    console.log('id', id)
+    // deleteRowMutation(id!)
+  }
+
+  const handleAddRow = (parentId: number | null, nested: number) => {
+    // addRowMutation({ parentId })
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {}
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    field: keyof RowData
-  ) => {
-    const value =
-      e.target.type === 'number' ? Number(e.target.value) : e.target.value
-    setRowData({
-      ...rowData,
-      [field]: value,
-    })
-  }
-
-  const handleKeyDown = async (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-
-      if (!rowData.rowName) return
-
-      try {
-        const res = await addRowMutation({
-          id: rowData.id,
-          rowName: rowData.rowName,
-          total: rowData.total,
-          salary: rowData.salary,
-          mimExploitation: rowData.mimExploitation,
-          machineOperatorSalary: rowData.machineOperatorSalary,
-          materials: rowData.materials,
-          mainCosts: rowData.mainCosts,
-          supportCosts: rowData.supportCosts,
-          equipmentCosts: rowData.equipmentCosts,
-          overheads: rowData.overheads,
-          estimatedProfit: rowData.estimatedProfit,
-          child: rowData.child,
-          parentId: rowData.parentId,
-        })
-      } catch (error) {
-        console.error('Failed to add row:', error)
-      }
-    }
-  }
-
-  const handleDelete = async () => {
-    try {
-      await deleteRowMutation({ id: rowData.id })
-      console.log(`Row with id ${rowData.id} deleted`)
-    } catch (error) {
-      console.error('Failed to delete row:', error)
-    }
-  }
-
+    key: keyof RowToRender
+  ) => {}
   return (
-    <tr className="row">
+    <tr
+      className={`row `}
+      onDoubleClick={handleDoubleClick}
+      onMouseUp={handleMouseUp}
+    >
       <td>
         <TableCell
-          addRow={() => addRow(id ?? null)}
-          id={id}
-          deleteRow={handleDelete}
+          id={row.id}
+          deleteRow={handleDeleteRow}
+          addRow={handleAddRow}
           nested={nested}
         />
       </td>
-      <td>
-        <input
-          ref={inputRef}
-          type="text"
-          value={rowData.rowName}
-          onChange={(e) => handleChange(e, 'rowName')}
-          disabled={isDisabled}
-          onKeyDown={handleKeyDown}
-        />
-      </td>
-      <td>
-        <input
-          type="number"
-          value={rowData.salary}
-          onChange={(e) => handleChange(e, 'salary')}
-          disabled={isDisabled}
-          onKeyDown={handleKeyDown}
-        />
-      </td>
-      <td>
-        <input
-          type="number"
-          value={rowData.equipmentCosts}
-          onChange={(e) => handleChange(e, 'equipmentCosts')}
-          disabled={isDisabled}
-          onKeyDown={handleKeyDown}
-        />
-      </td>
-      <td>
-        <input
-          type="number"
-          value={rowData.overheads}
-          onChange={(e) => handleChange(e, 'overheads')}
-          disabled={isDisabled}
-          onKeyDown={handleKeyDown}
-        />
-      </td>
-      <td>
-        <input
-          type="number"
-          value={rowData.estimatedProfit}
-          onChange={(e) => handleChange(e, 'estimatedProfit')}
-          disabled={isDisabled}
-          onKeyDown={handleKeyDown}
-        />
-      </td>
+      {rowKeys.map((key) => (
+        <td key={key}>
+          <input
+            ref={key === 'rowName' ? inputRef : null}
+            type={key === 'rowName' ? 'text' : 'number'}
+            value={row[key]}
+            onChange={(e) => handleChange(e, key)}
+            disabled={isDisabled}
+            onKeyDown={handleKeyDown}
+          />
+        </td>
+      ))}
     </tr>
   )
 }

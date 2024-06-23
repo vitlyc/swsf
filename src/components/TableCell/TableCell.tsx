@@ -5,8 +5,8 @@ import { useState } from 'react'
 
 type Props = {
   id?: number
-  addRow: (parentId: number | null) => void
-  deleteRow: () => void
+  addRow: (parentId: number | null, nested: number) => void
+  deleteRow: (id: number | undefined, nested: number) => void
   nested: number
 }
 
@@ -21,8 +21,12 @@ function TableCell({ id, addRow, deleteRow, nested }: Props) {
     setVisibleDelete(false)
   }
 
-  const handleClick = () => {
-    addRow(id ?? null)
+  const handleAddClick = () => {
+    addRow(id ?? null, nested)
+  }
+
+  const handleDeleteClick = () => {
+    deleteRow(id, nested)
   }
 
   return (
@@ -33,7 +37,7 @@ function TableCell({ id, addRow, deleteRow, nested }: Props) {
         onMouseOut={onMouseOut}
       >
         <FeedIcon
-          onClick={handleClick}
+          onClick={handleAddClick}
           className="icon edit"
           sx={{ color: '#7890B2' }}
         />
@@ -42,7 +46,7 @@ function TableCell({ id, addRow, deleteRow, nested }: Props) {
             className="icon delete"
             sx={{ color: '#DF4444' }}
             style={{ display: visibleDelete ? 'block' : 'none' }}
-            onClick={deleteRow}
+            onClick={handleDeleteClick}
           />
         )}
       </div>

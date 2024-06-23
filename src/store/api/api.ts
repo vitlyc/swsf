@@ -9,7 +9,7 @@ export const api = createApi({
   reducerPath: 'api',
   tagTypes: ['List'],
   endpoints: (build) => ({
-    getList: build.query<RowData[], void>({
+    getRows: build.query<RowData[], void>({
       query: () => '/row/list',
     }),
     addRow: build.mutation<RowData, Partial<RowData>>({
@@ -28,4 +28,4 @@ export const api = createApi({
   }),
 })
 
-export const { useGetListQuery, useAddRowMutation, useDeleteRowMutation } = api
+export const { useGetRowsQuery, useAddRowMutation, useDeleteRowMutation } = api

@@ -2,12 +2,12 @@ import { configureStore, ConfigureStoreOptions } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 
 import { api } from './api/api'
-import listReducer from './listSlice'
+import rowsSlice from './rowsSlice'
 
 export const store = configureStore({
   reducer: {
     [api.reducerPath]: api.reducer,
-    list: listReducer,
+    rows: rowsSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(api.middleware),
