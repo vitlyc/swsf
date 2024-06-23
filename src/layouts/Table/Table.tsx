@@ -20,6 +20,7 @@ export default function Table({}: Props) {
       </React.Fragment>
     ))
   }
+  // console.log('Table', rows)
 
   return (
     <div className="table">

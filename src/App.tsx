@@ -9,20 +9,18 @@ import { setRows } from './store/rowsSlice'
 function App() {
   const dispatch = useDispatch()
   const { data, error, isLoading } = useGetRowsQuery()
-  console.log(data)
 
   useEffect(() => {
     if (data) {
       dispatch(setRows(data))
     }
-  }, [data, dispatch])
+  }, [data, dispatch, isLoading])
 
   return (
     <div className="app">
       <Navbar />
       <Sidebar />
-
-      {!isLoading && !error && <Table />}
+      <Table />
     </div>
   )
 }

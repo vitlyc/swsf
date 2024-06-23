@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './TableRow.scss'
 import TableCell from '../TableCell/TableCell'
 import { useFocus } from '../../utils/useFocus'
 import { RowData, RowToRender } from '../../store/types'
-import { useAddRowMutation, useDeleteRowMutation } from '../../store/api/api'
+import {
+  useAddRowMutation,
+  useDeleteRowMutation,
+  useUpdateRowMutation,
+} from '../../store/api/api'
 import { useDispatch } from 'react-redux'
 import { addEmptyRow } from '../../store/rowsSlice'
 
@@ -25,8 +29,14 @@ function TableRow({ row, nested }: Props) {
   const [rowData, setRowData] = useState(row)
   const [addRowMutation] = useAddRowMutation()
   const [deleteRowMutation] = useDeleteRowMutation()
+  const [updateRowMutation] = useUpdateRowMutation()
   const inputRef = useFocus()
   const dispatch = useDispatch()
+  // console.log(row.id)
+
+  useEffect(() => {
+    setIsDisabled(row.id !== 112233)
+  }, [row.id, row])
 
   const handleDoubleClick = () => {
     setIsDisabled((prevState) => !prevState)
@@ -42,12 +52,35 @@ function TableRow({ row, nested }: Props) {
     }
   }
 
-  const addRow = (id: number | null, nested: number) => {
+  const handleAddRow = (id: number | null, nested: number) => {
     dispatch(addEmptyRow({ id, nested }))
-    console.log('id:', id, 'nested:', nested)
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {}
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (
+      e.key === 'Enter' &&
+      rowData.rowName.trim() !== '' &&
+      rowData.id !== row.id
+    ) {
+      addRowMutation(rowData)
+    }
+
+    if (
+      e.key === 'Enter' &&
+      rowData.rowName.trim() !== '' &&
+      rowData.id === row.id
+    ) {
+      if (rowData.id !== undefined) {
+        try {
+          await updateRowMutation({ id: rowData.id, ...rowData }).unwrap()
+        } catch (error) {
+          console.error('Failed to update row:', error)
+        }
+      } else {
+        console.error('ID is undefined')
+      }
+    }
+  }
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -63,7 +96,7 @@ function TableRow({ row, nested }: Props) {
 
   return (
     <tr
-      className={`row `}
+      className={`row ${row.id === 112233 ? 'new-row' : ''}`} // Add class for new rows
       onDoubleClick={handleDoubleClick}
       onMouseUp={handleMouseUp}
     >
@@ -71,7 +104,7 @@ function TableRow({ row, nested }: Props) {
         <TableCell
           id={row.id}
           deleteRow={handleDeleteRow}
-          addRow={addRow}
+          addRow={handleAddRow}
           nested={nested}
         />
       </td>
