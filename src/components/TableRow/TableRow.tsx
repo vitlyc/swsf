@@ -93,7 +93,7 @@ const TableRow = ({ row, nested }: Props) => {
 
   return (
     <tr
-      className={`row ${row.id === 112233 ? 'new-row' : ''}`}
+      className={`row ${row.id === 112233 ? 'new-row' : ''} no-select `}
       onDoubleClick={toggleDisabled}
     >
       <td>
