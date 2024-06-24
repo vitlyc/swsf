@@ -23,7 +23,7 @@ export default function Table({}: Props) {
   // console.log('Table', rows)
 
   return (
-    <div className="table">
+    <div className="table no-select">
       <div className="title">
         <h4>Строительно-монтажные работы</h4>
       </div>

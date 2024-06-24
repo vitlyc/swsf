@@ -4,7 +4,16 @@
 
     // grid-column: 2 / auto;
     // grid-row: 2 / span 1;
-
+    .no-select {
+        -webkit-user-select: none;
+        /* Chrome, Safari, Opera */
+        -moz-user-select: none;
+        /* Firefox */
+        -ms-user-select: none;
+        /* Internet Explorer/Edge */
+        user-select: none;
+        /* Стандартный синтаксис */
+    }
 
     width: calc(100vw - 260px);
     background-color: var(--bg-dark);
