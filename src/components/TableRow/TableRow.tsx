@@ -48,11 +48,7 @@ const TableRow = ({ row, nested }: Props) => {
       dispatch(deleteTemporaryRow())
     } else {
       if (id !== undefined) {
-        try {
-          deleteRowMutation({ id })
-        } catch (error) {
-          console.error('Failed to delete row:', error)
-        }
+        deleteRowMutation({ id })
       } else {
         console.error('ID is undefined')
       }
@@ -65,16 +61,12 @@ const TableRow = ({ row, nested }: Props) => {
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && rowData.rowName.trim() !== '') {
-      try {
-        if (rowData.id === 112233) {
-          addRowMutation(rowData)
-          dispatch(resetIsRowCreated())
-        } else if (rowData.id !== undefined) {
-          toggleDisabled()
-          updateRowMutation({ id: rowData.id, ...rowData })
-        }
-      } catch (error) {
-        console.error('Failed to process row:', error)
+      if (rowData.id === 112233) {
+        addRowMutation(rowData)
+        dispatch(resetIsRowCreated())
+      } else if (rowData.id !== undefined) {
+        toggleDisabled()
+        updateRowMutation({ id: rowData.id, ...rowData })
       }
     }
   }
