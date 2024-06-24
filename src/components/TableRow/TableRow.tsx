@@ -28,7 +28,7 @@ const rowKeys: Array<keyof RowToRender> = [
   'estimatedProfit',
 ]
 
-function TableRow({ row, nested }: Props) {
+const TableRow = ({ row, nested }: Props) => {
   const [isDisabled, setIsDisabled] = useState(row.id !== 112233)
   const [rowData, setRowData] = useState(row)
   const [addRowMutation] = useAddRowMutation()
@@ -41,18 +41,18 @@ function TableRow({ row, nested }: Props) {
     setIsDisabled(row.id !== 112233)
   }, [row.id, row])
 
-  const handleDoubleClick = () => {
-    setIsDisabled((prevState) => !prevState)
-  }
+  const toggleDisabled = () => setIsDisabled((prevState) => !prevState)
 
-  const handleMouseUp = () => {}
-
-  const handleDeleteRow = (id: number | undefined, nested: number) => {
+  const handleDeleteRow = async (id: number | undefined, nested: number) => {
     if (id === 112233) {
       dispatch(deleteTemporaryRow())
     } else {
       if (id !== undefined) {
-        deleteRowMutation({ id })
+        try {
+          await deleteRowMutation({ id }).unwrap()
+        } catch (error) {
+          console.error('Failed to delete row:', error)
+        }
       } else {
         console.error('ID is undefined')
       }
@@ -64,25 +64,17 @@ function TableRow({ row, nested }: Props) {
   }
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (
-      e.key === 'Enter' &&
-      rowData.rowName.trim() !== '' &&
-      rowData.id === 112233
-    ) {
+    if (e.key === 'Enter' && rowData.rowName.trim() !== '') {
       try {
-        await addRowMutation(rowData).unwrap()
-        dispatch(resetIsRowCreated()) // Сброс состояния после добавления строки
-      } catch (error) {
-        console.error('Failed to add row:', error)
-      }
-    } else if (e.key === 'Enter' && rowData.rowName.trim() !== '') {
-      setIsDisabled((prevState) => !prevState)
-      if (rowData.id !== undefined) {
-        try {
+        if (rowData.id === 112233) {
+          await addRowMutation(rowData).unwrap()
+          dispatch(resetIsRowCreated()) // Сброс состояния после добавления строки
+        } else if (rowData.id !== undefined) {
+          toggleDisabled()
           await updateRowMutation({ id: rowData.id, ...rowData }).unwrap()
-        } catch (error) {
-          console.error('Failed to update row:', error)
         }
+      } catch (error) {
+        console.error('Failed to process row:', error)
       }
     }
   }
@@ -102,8 +94,7 @@ function TableRow({ row, nested }: Props) {
   return (
     <tr
       className={`row ${row.id === 112233 ? 'new-row' : ''}`}
-      onDoubleClick={handleDoubleClick}
-      onMouseUp={handleMouseUp}
+      onDoubleClick={toggleDisabled}
     >
       <td>
         <TableCell
