@@ -98,7 +98,7 @@ const rowsSlice = createSlice({
     ) => {
       if (!state.isRowCreated) {
         const newRow: RowData = {
-          id: 112233, // Temporary ID for the new row
+          id: 112233, // temporary ID
           parentId: action.payload.id,
           child: [],
           equipmentCosts: 0,

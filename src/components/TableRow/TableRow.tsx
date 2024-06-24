@@ -68,7 +68,7 @@ const TableRow = ({ row, nested }: Props) => {
       try {
         if (rowData.id === 112233) {
           await addRowMutation(rowData).unwrap()
-          dispatch(resetIsRowCreated()) // Сброс состояния после добавления строки
+          dispatch(resetIsRowCreated())
         } else if (rowData.id !== undefined) {
           toggleDisabled()
           await updateRowMutation({ id: rowData.id, ...rowData }).unwrap()
