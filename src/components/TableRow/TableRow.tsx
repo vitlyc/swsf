@@ -31,6 +31,7 @@ const rowKeys: Array<keyof RowToRender> = [
 const TableRow = ({ row, nested }: Props) => {
   const [isDisabled, setIsDisabled] = useState(row.id !== 112233)
   const [rowData, setRowData] = useState(row)
+  const [shouldFocus, setShouldFocus] = useState(false)
   const [addRowMutation] = useAddRowMutation()
   const [deleteRowMutation] = useDeleteRowMutation()
   const [updateRowMutation] = useUpdateRowMutation()
@@ -41,9 +42,19 @@ const TableRow = ({ row, nested }: Props) => {
     setIsDisabled(row.id !== 112233)
   }, [row.id, row])
 
-  const toggleDisabled = () => setIsDisabled((prevState) => !prevState)
+  useEffect(() => {
+    if (shouldFocus && inputRef.current) {
+      inputRef.current.focus()
+      setShouldFocus(false)
+    }
+  }, [shouldFocus, inputRef])
 
-  const handleDeleteRow = async (id: number | undefined, nested: number) => {
+  const toggleDisabled = () => {
+    setIsDisabled((prevState) => !prevState)
+    setShouldFocus((prevState) => !prevState)
+  }
+
+  const handleDeleteRow = (id: number | undefined, nested: number) => {
     if (id === 112233) {
       dispatch(deleteTemporaryRow())
     } else {
@@ -59,7 +70,7 @@ const TableRow = ({ row, nested }: Props) => {
     dispatch(addEmptyRow({ id, nested }))
   }
 
-  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && rowData.rowName.trim() !== '') {
       if (rowData.id === 112233) {
         addRowMutation(rowData)
