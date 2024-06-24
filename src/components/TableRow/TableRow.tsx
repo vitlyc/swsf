@@ -49,7 +49,7 @@ const TableRow = ({ row, nested }: Props) => {
     } else {
       if (id !== undefined) {
         try {
-          await deleteRowMutation({ id }).unwrap()
+          deleteRowMutation({ id })
         } catch (error) {
           console.error('Failed to delete row:', error)
         }
@@ -67,11 +67,11 @@ const TableRow = ({ row, nested }: Props) => {
     if (e.key === 'Enter' && rowData.rowName.trim() !== '') {
       try {
         if (rowData.id === 112233) {
-          await addRowMutation(rowData).unwrap()
+          addRowMutation(rowData)
           dispatch(resetIsRowCreated())
         } else if (rowData.id !== undefined) {
           toggleDisabled()
-          await updateRowMutation({ id: rowData.id, ...rowData }).unwrap()
+          updateRowMutation({ id: rowData.id, ...rowData })
         }
       } catch (error) {
         console.error('Failed to process row:', error)
