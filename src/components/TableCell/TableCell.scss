@@ -124,11 +124,11 @@
         &::before {
             content: '';
             position: absolute;
-            top: -115%; //вверх вниз
+            top: -120%; //вверх вниз
             bottom: -50%; //длина палочки -больше
             left: -11%; // -влево
 
-            height: 52px; //длина палочки
+            height: 53px; //длина палочки
             width: 1px;
             background-color: rgb(255, 255, 255);
             z-index: 0;
@@ -139,7 +139,7 @@
             position: absolute;
             top: 56%; //-вверх
             left: 0%; // -влево
-            width: 12px; //длина палочки
+            width: 11px; //длина палочки
             height: 1px;
             background-color: rgb(255, 255, 255);
             z-index: 1;
